@@ -15,22 +15,19 @@ import java.util.Objects;
 
 public class BpmnAutoLayout {
 
+    // 保存原始 extensionElements
+    private static Map<String, TExtensionElements> extensionElementsMap = new HashMap<>();
+
     public static String layout(String bpmn) throws Exception {
         XmlParser xmlParser = new XmlParser();
         TDefinitions originDefinitions = xmlParser.unmarshall(bpmn);
-
-        // 保存原始 extensionElements
-        Map<String, TExtensionElements> extensionElementsMap = new HashMap<>();
         originDefinitions.getRootElement().forEach(rootElement -> {
             TRootElement tRootElement = rootElement.getValue();
             if (tRootElement instanceof TProcess) {
                 TProcess process = (TProcess) tRootElement;
                 process.getFlowElement().forEach(flowElement -> {
                     TFlowElement element = flowElement.getValue();
-                    TExtensionElements extensionElements = element.getExtensionElements();
-                    if (Objects.nonNull(extensionElements)) {
-                        extensionElementsMap.put(element.getId(), extensionElements);
-                    }
+                    stashExtensitionElements(element);
                 });
             }
         });
@@ -52,6 +49,10 @@ public class BpmnAutoLayout {
         // 重写headers, 命名空间
         TDefinitions layoutedDefinitions = xmlParser.unmarshall(xml);
 
+        // 定义 exporter
+        layoutedDefinitions.setExporter("BPMNLayouter");
+        layoutedDefinitions.setExporterVersion("1.0.0");
+
         // 还原 extensionElements
         layoutedDefinitions.getRootElement().forEach(rootElement -> {
             TRootElement tRootElement = rootElement.getValue();
@@ -59,9 +60,7 @@ public class BpmnAutoLayout {
                 TProcess process = (TProcess) tRootElement;
                 process.getFlowElement().forEach(flowElement -> {
                     TFlowElement element = flowElement.getValue();
-                    if (extensionElementsMap.containsKey(element.getId())) {
-                        element.setExtensionElements(extensionElementsMap.get(element.getId()));
-                    }
+                    unStashExtensitionElements(element);
                 });
             }
         });
@@ -69,5 +68,34 @@ public class BpmnAutoLayout {
         BpmnInOut bpmnInOut = new BpmnInOut(xmlParser);
         String layoutedXml = bpmnInOut.writeToBpmn(layoutedDefinitions);
         return layoutedXml;
+    }
+
+    private static void stashExtensitionElements(TFlowElement element) {
+        if (element instanceof TSubProcess) {
+            TSubProcess subProcess = (TSubProcess) element;
+            subProcess.getFlowElement().forEach(sub -> {
+                TFlowElement subElement = sub.getValue();
+                stashExtensitionElements(subElement);
+            });
+        } else {
+            TExtensionElements extensionElements = element.getExtensionElements();
+            if (Objects.nonNull(extensionElements)) {
+                extensionElementsMap.put(element.getId(), extensionElements);
+            }
+        }
+    }
+
+    private static void unStashExtensitionElements(TFlowElement element) {
+        if (element instanceof TSubProcess) {
+            TSubProcess subProcess = (TSubProcess) element;
+            subProcess.getFlowElement().forEach(sub -> {
+                TFlowElement subElement = sub.getValue();
+                unStashExtensitionElements(subElement);
+            });
+        } else {
+            if (extensionElementsMap.containsKey(element.getId())) {
+                element.setExtensionElements(extensionElementsMap.get(element.getId()));
+            }
+        }
     }
 }
