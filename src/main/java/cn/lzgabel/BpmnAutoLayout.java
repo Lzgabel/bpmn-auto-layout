@@ -10,7 +10,6 @@ import org.activiti.bpmn.converter.BpmnXMLConverter;
 import org.activiti.bpmn.model.BpmnModel;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -30,12 +29,6 @@ public class BpmnAutoLayout {
                     TFlowElement element = flowElement.getValue();
                     TExtensionElements extensionElements = element.getExtensionElements();
                     if (Objects.nonNull(extensionElements)) {
-                        List<Object> any = extensionElements.getAny();
-
-                        any.forEach(e -> {
-                            System.out.println(e);
-                        });
-
                         extensionElementsMap.put(element.getId(), extensionElements);
                     }
                 });
