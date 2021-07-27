@@ -110,7 +110,7 @@ public class SimpleOrthogonalFlowRouter {
 			targetNodeCenter = getLeftCenterPoint(targetNodeGI);
 
 			// 如果目标节点是 gateway --> right top
-			if (targetNode instanceof Gateway) {
+			if (!(sourceNode instanceof Gateway) && targetNode instanceof Gateway) {
 				sourceNodeCenter = getRightCenterPoint(sourceNodeGI);
 				targetNodeCenter = getCenterTopPoint(targetNodeGI);
 			}

@@ -318,7 +318,7 @@ public class SimpleGridLayouter extends Layouter {
 
 			position.column = previousPosition.column + 1;
 			if(prevCellCount > 0)
-				position.row = rowSum / prevCellCount;
+				position.row = rowSum/ prevCellCount;
 		}
 
 		if(boundaryEventCount > 0)
@@ -651,24 +651,52 @@ public class SimpleGridLayouter extends Layouter {
 
 
 	private void markCellsForSplit(FlowNode node, GridPosition position, int size, Grid<FlowNode> grid) {
-		List<Cell<FlowNode>> markedCells = new ArrayList<Cell<FlowNode>>();
+		List<Cell<FlowNode>> markedCells = new ArrayList<>();
 		markedCellsMap.put(node, markedCells);
-		for (int i = 0; i < size - 1; i += 2) {
+		if (size > 2) {
+			for (int i = size / 2 + 1; i < size; i++) {
+				int numberOfShapesInTheSplit = size;
+				int indexOfCurrentShape = i - 1;
+				int relativeYPosition = indexOfCurrentShape - numberOfShapesInTheSplit / 2;
+				int row = position.row + relativeYPosition;
+				GridPosition upperCellPosition = new GridPosition(row, position.column + 2);
+				grid.addRowAbove(row);
+				Cell<FlowNode> upperCell = grid.getCell(upperCellPosition);
+				assert (upperCell != null);
+				markedCells.add(upperCell);
+			}
 
+			for (int i = size / 2; i >= 0; i--) {
+				int numberOfShapesInTheSplit = size;
+				int indexOfCurrentShape = i + 1;
+				if (size % 2 != 0) {
+					// 奇数个图形
+					indexOfCurrentShape = i;
+				}
+				int relativeYPosition = indexOfCurrentShape - numberOfShapesInTheSplit / 2;
+				int row = ((position.row + size / 2) - relativeYPosition);
+				GridPosition upperCellPosition = new GridPosition(row, position.column + 2);
+				grid.addRowBelow(row);
+				Cell<FlowNode> upperCell = grid.getCell(upperCellPosition);
+				assert (upperCell != null);
+				markedCells.add(upperCell);
+			}
+		} else if (size <= 2) {
+			// 只有 2 个节点时处理
 			int currentRow = position.row;
 
-			GridPosition upperCellPosition = new GridPosition(currentRow - (i + 1), position.column + 2);
+			GridPosition upperCellPosition = new GridPosition(currentRow -  1, position.column + 2);
 			while(grid.getCell(upperCellPosition) == null || grid.getCell(upperCellPosition).getValue() != null)
 			{
 				grid.addRowAbove(currentRow);
 				currentRow++;
-				upperCellPosition = new GridPosition(currentRow - (i + 1), position.column + 2);
+				upperCellPosition = new GridPosition(currentRow - 1, position.column + 2);
 			}
 			Cell<FlowNode> upperCell = grid.getCell(upperCellPosition);
 			assert(upperCell != null);
 			markedCells.add(upperCell);
 
-			GridPosition lowerCellPosition = new GridPosition(currentRow + (i + 1), position.column + 2);
+			GridPosition lowerCellPosition = new GridPosition(currentRow  + 1, position.column + 2);
 
 			while(grid.getCell(lowerCellPosition) == null || grid.getCell(lowerCellPosition).getValue() != null)
 				grid.addRowBelow(currentRow);
@@ -676,13 +704,6 @@ public class SimpleGridLayouter extends Layouter {
 			Cell<FlowNode> lowerCell = grid.getCell(lowerCellPosition);
 			assert(lowerCell != null);
 			markedCells.add(lowerCell);
-		}
-
-		if (size % 2 != 0)
-		{
-			GridPosition middelCellPosition = new GridPosition(position.row + 1, position.column + 2);
-			Cell<FlowNode> middleCell = grid.getCell(middelCellPosition);
-			markedCells.add(middleCell);
 		}
 
 	}
