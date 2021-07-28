@@ -317,8 +317,14 @@ public class SimpleGridLayouter extends Layouter {
 			}
 
 			position.column = previousPosition.column + 1;
-			if(prevCellCount > 0)
-				position.row = rowSum/ prevCellCount;
+			if(prevCellCount > 0) {
+                // 针对分支条件只有单边展示情况优化
+                if (rowSum <= 2) {
+                    position.row = (rowSum % 2 == 0) ? rowSum-1 : rowSum+1 / prevCellCount;
+                } else {
+                    position.row =  rowSum / prevCellCount;
+                }
+            }
 		}
 
 		if(boundaryEventCount > 0)
