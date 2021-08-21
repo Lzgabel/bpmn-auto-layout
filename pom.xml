@@ -4,12 +4,27 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>cn.lzgabel.layouter</groupId>
-	<artifactId>BPMNLayouter</artifactId>
+	<artifactId>bpmn-auto-layout</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>BPMNLayouter</name>
-	<url>http://maven.apache.org</url>
+	<name>bpmn-auto-layout</name>
+	<url>https://github.com/Lzgabel/bpmn-auto-layout</url>
+
+	<developers>
+		<developer>
+			<name>lzgabel</name>
+			<email>lz19960321lz@163.com</email>
+			<url>http://www.lzgabel.cn</url>
+		</developer>
+	</developers>
+
+	<scm>
+		<tag>master</tag>
+		<connection>https://github.com/Lzgabel/bpmn-auto-layout</connection>
+		<developerConnection>https://github.com/Lzgabel</developerConnection>
+		<url>https://github.com/Lzgabel/bpmn-auto-layout</url>
+	</scm>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -58,43 +73,7 @@
 	</dependencies>
 
 	<build>
-		<pluginManagement>
-			<plugins>
-				<!-- Maven Standard Plugins: lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
-				<plugin>
-					<artifactId>maven-assembly-plugin</artifactId>
-					<version>3.2.0</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-clean-plugin</artifactId>
-					<version>3.1.0</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-resources-plugin</artifactId>
-					<version>3.1.0</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.8.1</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.22.2</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.2.0</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-install-plugin</artifactId>
-					<version>2.5.2</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-deploy-plugin</artifactId>
-					<version>2.8.2</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
+		<finalName>bpmn-auto-layout</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -113,17 +92,67 @@
 					<locale>zh_CN_#Hans</locale>
 				</configuration>
 			</plugin>
+			<!-- 要生成Javadoc和Source jar文件，您必须配置javadoc和源Maven插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!--  必须配置GPG插件用于使用以下配置对组件进行签名 -->
+			<!-- GPG -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.7</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
 	<distributionManagement>
-		<repository>
-			<id>private-releases</id>
-			<url>http://116.62.222.54/repository/maven-releases</url>
-		</repository>
 		<snapshotRepository>
-			<id>private-snapshots</id>
-			<url>http://116.62.222.54/repository/maven-snapshots</url>
+			<id>maven_nexus_repo</id>
+			<name>maven_nexus_repo</name>
+			<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
+
 </project>
