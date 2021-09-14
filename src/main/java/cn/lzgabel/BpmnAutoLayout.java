@@ -15,10 +15,13 @@ import java.util.Objects;
 
 public class BpmnAutoLayout {
 
-    // 保存原始 extensionElements
-    private static Map<String, TExtensionElements> extensionElementsMap = new HashMap<>();
+    /**
+     * 保存原始 extensionElements
+     */
+    private static Map<String, TExtensionElements> extensionElementsMap;
 
     public static String layout(String bpmn) throws Exception {
+        extensionElementsMap = new HashMap<>(16);
         XmlParser xmlParser = new XmlParser();
         TDefinitions originDefinitions = xmlParser.unmarshall(bpmn);
         originDefinitions.getRootElement().forEach(rootElement -> {
@@ -29,6 +32,8 @@ public class BpmnAutoLayout {
                     TFlowElement element = flowElement.getValue();
                     stashExtensitionElements(element);
                 });
+            } else {
+                stashExtensitionElements(tRootElement);
             }
         });
 
@@ -62,6 +67,8 @@ public class BpmnAutoLayout {
                     TFlowElement element = flowElement.getValue();
                     unStashExtensitionElements(element);
                 });
+            } else {
+                unStashExtensitionElements(tRootElement);
             }
         });
 
@@ -70,7 +77,7 @@ public class BpmnAutoLayout {
         return layoutedXml;
     }
 
-    private static void stashExtensitionElements(TFlowElement element) {
+    private static void stashExtensitionElements(TBaseElement element) {
         if (element instanceof TSubProcess) {
             TSubProcess subProcess = (TSubProcess) element;
             subProcess.getFlowElement().forEach(sub -> {
@@ -85,7 +92,7 @@ public class BpmnAutoLayout {
         }
     }
 
-    private static void unStashExtensitionElements(TFlowElement element) {
+    private static void unStashExtensitionElements(TBaseElement element) {
         if (element instanceof TSubProcess) {
             TSubProcess subProcess = (TSubProcess) element;
             subProcess.getFlowElement().forEach(sub -> {
