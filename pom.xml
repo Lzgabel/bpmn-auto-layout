@@ -5,20 +5,32 @@
 
 	<groupId>cn.lzgabel.layouter</groupId>
 	<artifactId>bpmn-auto-layout</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>bpmn-auto-layout</name>
 	<url>https://github.com/Lzgabel/bpmn-auto-layout</url>
+	<description>Tools for auto layout bpmn files</description>
 
 	<developers>
 		<developer>
 			<name>lzgabel</name>
 			<email>lz19960321lz@163.com</email>
 			<url>http://www.lzgabel.cn</url>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
 		</developer>
 	</developers>
 
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 	<scm>
 		<tag>master</tag>
 		<connection>https://github.com/Lzgabel/bpmn-auto-layout</connection>
@@ -96,6 +108,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
+				<version>2.2.1</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -108,6 +121,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -139,11 +153,19 @@
 				<version>1.6.7</version>
 				<extensions>true</extensions>
 				<configuration>
-					<serverId>ossrh</serverId>
+					<!-- serverId 即为 settings.xml 中配置远程仓库登录的 id -->
+					<serverId>maven_nexus_repo</serverId>
 					<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
 					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<version>2.7</version>
+			</plugin>
+
 		</plugins>
 	</build>
 
@@ -153,6 +175,12 @@
 			<name>maven_nexus_repo</name>
 			<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
+
+		<repository>
+			<id>maven_nexus_repo</id>
+			<name>maven_nexus_repo</name>
+			<url>https://s01.oss.sonatype.org/content/repositories/releases/</url>
+		</repository>
 	</distributionManagement>
 
 </project>

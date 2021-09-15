@@ -15,10 +15,13 @@ import java.util.Objects;
 
 public class BpmnAutoLayout {
 
-    // 保存原始 extensionElements
-    private static Map<String, TExtensionElements> extensionElementsMap = new HashMap<>();
+    /**
+     * 保存原始 extensionElements
+     */
+    private static Map<String, TExtensionElements> extensionElementsMap;
 
     public static String layout(String bpmn) throws Exception {
+        extensionElementsMap = new HashMap<>(16);
         XmlParser xmlParser = new XmlParser();
         TDefinitions originDefinitions = xmlParser.unmarshall(bpmn);
         originDefinitions.getRootElement().forEach(rootElement -> {
