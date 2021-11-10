@@ -32,6 +32,10 @@ public class BpmnAutoLayout {
                     TFlowElement element = flowElement.getValue();
                     stashExtensitionElements(element);
                 });
+                TExtensionElements extensionElements = process.getExtensionElements();
+                if (Objects.nonNull(extensionElements)) {
+                    extensionElementsMap.put(process.getId(), extensionElements);
+                }
             } else {
                 stashExtensitionElements(tRootElement);
             }
@@ -67,6 +71,9 @@ public class BpmnAutoLayout {
                     TFlowElement element = flowElement.getValue();
                     unStashExtensitionElements(element);
                 });
+                if (extensionElementsMap.containsKey(process.getId())) {
+                    process.setExtensionElements(extensionElementsMap.get(process.getId()));
+                }
             } else {
                 unStashExtensitionElements(tRootElement);
             }
