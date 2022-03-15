@@ -15,7 +15,8 @@
  */
 package cn.lzgabel.util;
 
-import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
+
+import cn.lzgabel.jaxb.runtime.marshaller.NamespacePrefixMapper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,9 +25,9 @@ import java.util.Set;
 public class BpmnNamespacePrefixMapper extends NamespacePrefixMapper {
 
     private static final Map<String, String> namespaces = new HashMap<>();
+
     static {
         namespaces.put("http://www.omg.org/spec/BPMN/20100524/DI", "bpmndi");
-        // 去除 semantic 前缀
         namespaces.put("http://www.omg.org/spec/BPMN/20100524/MODEL", "");
         namespaces.put("http://camunda.org/schema/zeebe/1.0", "zeebe");
         namespaces.put("http://www.omg.org/spec/DD/20100524/DC", "dc");
