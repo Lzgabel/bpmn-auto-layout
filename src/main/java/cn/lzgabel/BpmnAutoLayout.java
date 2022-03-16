@@ -29,7 +29,7 @@ public class BpmnAutoLayout {
         TDefinitions layoutedDefinitions = unmarshall(Util.write(bpmnModel));
 
         // 重写定义 exporter
-        originDefinitions.setExporter("BPMNLayouter");
+        originDefinitions.setExporter("Bpmn Auto Layouter");
         originDefinitions.setExporterVersion("1.0.0");
         originDefinitions.getBPMNDiagram().clear();
         originDefinitions.getBPMNDiagram().addAll(layoutedDefinitions.getBPMNDiagram());

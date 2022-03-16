@@ -5,7 +5,7 @@
 
     <groupId>cn.lzgabel.layouter</groupId>
     <artifactId>bpmn-auto-layout</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>bpmn-auto-layout</name>
@@ -15,7 +15,7 @@
     <developers>
         <developer>
             <name>lzgabel</name>
-            <email>lz19960321lz@163.com</email>
+            <email>lz19960321lz@gmail.com</email>
             <url>http://www.lzgabel.cn</url>
             <roles>
                 <role>Developer</role>
@@ -51,7 +51,7 @@
             <dependency>
                 <groupId>cn.lzgabel.jaxb</groupId>
                 <artifactId>jaxb-bom</artifactId>
-                <version>4.0.0-SNAPSHOT</version>
+                <version>4.0.0</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
@@ -69,19 +69,7 @@
         <dependency>
             <groupId>org.activiti</groupId>
             <artifactId>activiti-bpmn-converter</artifactId>
-            <version>5.17.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.5</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jdom</groupId>
-            <artifactId>jdom2</artifactId>
-            <version>2.0.6</version>
+            <version>7.1.0.M6</version>
         </dependency>
 
         <dependency>
